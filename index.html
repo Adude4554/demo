@@ -1,0 +1,361 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MVO Stream - Download</title>
+  <meta name="description" content="MVO Stream - Discover and stream movies and TV shows. Free, open source, no ads.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>ðŸŽ¬</text></svg>">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #000;
+      color: #fff;
+      overflow-x: hidden;
+    }
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 2rem 1.5rem 4rem;
+      background:
+        radial-gradient(ellipse 80% 60% at 50% 0%, rgba(229,9,20,0.15) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 40% at 80% 20%, rgba(229,9,20,0.08) 0%, transparent 50%),
+        #000;
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 200px;
+      background: linear-gradient(to top, #000, transparent);
+      pointer-events: none;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 100px;
+      padding: 0.4rem 1rem;
+      font-size: 0.8rem;
+      color: #aaa;
+      margin-bottom: 2rem;
+      backdrop-filter: blur(10px);
+    }
+    .badge .dot {
+      width: 6px;
+      height: 6px;
+      background: #22c55e;
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+    .logo {
+      font-size: clamp(3rem, 8vw, 5rem);
+      font-weight: 800;
+      letter-spacing: -2px;
+      line-height: 1;
+      margin-bottom: 1rem;
+    }
+    .logo span { color: #e50914; }
+    .tagline {
+      font-size: 1.2rem;
+      color: #888;
+      max-width: 480px;
+      line-height: 1.6;
+      margin-bottom: 2.5rem;
+    }
+    .download-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      background: #e50914;
+      color: #fff;
+      font-size: 1.1rem;
+      font-weight: 700;
+      padding: 1rem 2.5rem;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.25s ease;
+      box-shadow: 0 0 40px rgba(229,9,20,0.3), 0 4px 15px rgba(0,0,0,0.5);
+      position: relative;
+      z-index: 1;
+    }
+    .download-btn:hover {
+      background: #f6121d;
+      transform: translateY(-2px);
+      box-shadow: 0 0 60px rgba(229,9,20,0.4), 0 8px 25px rgba(0,0,0,0.6);
+    }
+    .download-btn:active { transform: translateY(0); }
+    .download-btn svg { width: 22px; height: 22px; fill: currentColor; }
+    .download-meta {
+      margin-top: 1rem;
+      font-size: 0.8rem;
+      color: #555;
+    }
+    .screenshot-section {
+      position: relative;
+      padding: 2rem 1.5rem 6rem;
+      display: flex;
+      justify-content: center;
+    }
+    .screenshot-wrapper {
+      position: relative;
+      max-width: 1000px;
+      width: 100%;
+    }
+    .screenshot-frame {
+      position: relative;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.1);
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,0.05),
+        0 25px 80px rgba(0,0,0,0.8),
+        0 0 100px rgba(229,9,20,0.1);
+    }
+    .screenshot-frame img {
+      display: block;
+      width: 100%;
+      height: auto;
+      object-fit: cover;
+      object-position: top;
+      max-height: 550px;
+    }
+    .screenshot-frame::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 32px;
+      background: #1a1a1a;
+      z-index: 2;
+      border-bottom: 1px solid #333;
+    }
+    .screenshot-frame::after {
+      content: 'MVO Stream';
+      position: absolute;
+      top: 7px;
+      left: 45px;
+      font-size: 0.7rem;
+      color: #888;
+      z-index: 3;
+    }
+    .window-dots {
+      position: absolute;
+      top: 10px;
+      left: 12px;
+      display: flex;
+      gap: 6px;
+      z-index: 3;
+    }
+    .window-dots span {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+    .window-dots span:nth-child(1) { background: #ff5f57; }
+    .window-dots span:nth-child(2) { background: #febc2e; }
+    .window-dots span:nth-child(3) { background: #28c840; }
+    .features-section {
+      padding: 6rem 1.5rem;
+      background: linear-gradient(180deg, #000 0%, #0a0a0a 50%, #000 100%);
+    }
+    .features-section h2 {
+      text-align: center;
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+    .features-section h2 span { color: #e50914; }
+    .features-sub {
+      text-align: center;
+      color: #666;
+      margin-bottom: 3rem;
+      font-size: 1rem;
+    }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    .feature-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 16px;
+      padding: 2rem;
+      transition: all 0.3s ease;
+    }
+    .feature-card:hover {
+      background: rgba(255,255,255,0.05);
+      border-color: rgba(229,9,20,0.3);
+      transform: translateY(-4px);
+    }
+    .feature-icon {
+      width: 48px;
+      height: 48px;
+      background: rgba(229,9,20,0.1);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      margin-bottom: 1rem;
+    }
+    .feature-card h3 {
+      font-size: 1.05rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    .feature-card p {
+      font-size: 0.85rem;
+      color: #888;
+      line-height: 1.5;
+    }
+    .tech-section {
+      padding: 4rem 1.5rem;
+      text-align: center;
+    }
+    .tech-section h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 2rem;
+      color: #666;
+    }
+    .tech-badges {
+      display: flex;
+      gap: 0.75rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .tech-badge {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px;
+      padding: 0.5rem 1rem;
+      font-size: 0.8rem;
+      color: #aaa;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .tech-badge .dot { font-size: 0.6rem; }
+    .footer {
+      text-align: center;
+      padding: 3rem 1.5rem;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      color: #444;
+      font-size: 0.8rem;
+    }
+    .footer a { color: #666; text-decoration: none; transition: color 0.2s; }
+    .footer a:hover { color: #e50914; }
+    .footer-links {
+      display: flex;
+      gap: 1.5rem;
+      justify-content: center;
+      margin-bottom: 1rem;
+    }
+    @media (max-width: 768px) {
+      .hero { padding: 3rem 1rem 4rem; }
+      .tagline { font-size: 1rem; }
+      .download-btn { font-size: 1rem; padding: 0.9rem 2rem; }
+      .screenshot-frame img { max-height: 350px; }
+      .features-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <section class="hero">
+    <div class="badge"><span class="dot"></span> v1.0.0 &mdash; Windows 10/11</div>
+    <h1 class="logo">MVO <span>Stream</span></h1>
+    <p class="tagline">Discover, search, and stream thousands of movies and TV shows. Beautiful interface, zero ads, completely free.</p>
+    <a href="https://github.com/Adude4554/demo/releases/download/v1.0.0/MVO.Stream.Setup.1.0.0.exe" class="download-btn">
+      <svg viewBox="0 0 24 24"><path d="M13 5v6h1.17L12 13.17 9.83 11H11V5h2zm2-2H9v6H5l7 7 7-7h-4V3zm-4 16H5v2h14v-2h-4z"/></svg>
+      Download for Windows
+    </a>
+    <p class="download-meta">Free &middot; ~200 MB &middot; No installation required</p>
+  </section>
+  <section class="screenshot-section">
+    <div class="screenshot-wrapper">
+      <div class="screenshot-frame">
+        <div class="window-dots"><span></span><span></span><span></span></div>
+        <img src="app-home.png" alt="MVO Stream Home Page" loading="lazy">
+      </div>
+    </div>
+  </section>
+  <section class="features-section">
+    <h2>Everything you need to <span>watch</span></h2>
+    <p class="features-sub">Built for people who love movies and shows</p>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">ðŸŽ¬</div>
+        <h3>Movies & TV Shows</h3>
+        <p>Browse trending, popular, and top-rated content. Powered by TMDB with real-time data.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">ðŸ”</div>
+        <h3>Instant Search</h3>
+        <p>Find any movie or TV show instantly with live search across movies, shows, and people.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">ðŸ“º</div>
+        <h3>Built-in Player</h3>
+        <p>Watch directly in the app with the integrated video player. No browser needed.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">ðŸ“‹</div>
+        <h3>Watchlist</h3>
+        <p>Save movies and shows to your personal watchlist. Track what you want to watch.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">ðŸš«</div>
+        <h3>No Ads</h3>
+        <p>Zero advertisements, popups, or tracking. Just pure streaming without interruptions.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">âš¡</div>
+        <h3>Fast & Lightweight</h3>
+        <p>Native desktop app built with Electron. Opens instantly, runs smoothly.</p>
+      </div>
+    </div>
+  </section>
+  <section class="tech-section">
+    <h2>Built with modern tech</h2>
+    <div class="tech-badges">
+      <div class="tech-badge"><span class="dot" style="color:#61dafb">â—</span> React 19</div>
+      <div class="tech-badge"><span class="dot" style="color:#3178c6">â—</span> TypeScript</div>
+      <div class="tech-badge"><span class="dot" style="color:#646cff">â—</span> Vite</div>
+      <div class="tech-badge"><span class="dot" style="color:#38bdf8">â—</span> Tailwind CSS</div>
+      <div class="tech-badge"><span class="dot" style="color:#9146ff">â—</span> Electron</div>
+      <div class="tech-badge"><span class="dot" style="color:#e50914">â—</span> TMDB API</div>
+      <div class="tech-badge"><span class="dot" style="color:#22c55e">â—</span> Zustand</div>
+    </div>
+  </section>
+  <footer class="footer">
+    <div class="footer-links">
+      <a href="https://github.com/Adude4554/demo">GitHub</a>
+      <a href="https://github.com/Adude4554/demo/releases">Releases</a>
+      <a href="https://github.com/Adude4554/demo/issues">Issues</a>
+    </div>
+    <p>MVO Stream &copy; 2026 &middot; Open Source &middot; Built with React + Electron</p>
+  </footer>
+</body>
+</html>
