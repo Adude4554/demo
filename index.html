@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MVO Stream - Download</title>
-  <meta name="description" content="MVO Stream - Discover and stream movies and TV shows. Free, open source, no ads.">
+  <meta name="description" content="MVO Stream - Discover and stream movies and TV shows. Free, open source, no ads. Available on Windows and Android.">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>M</text></svg>">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -77,6 +77,14 @@
       line-height: 1.6;
       margin-bottom: 2.5rem;
     }
+    .download-buttons {
+      display: flex;
+      gap: 1rem;
+      position: relative;
+      z-index: 1;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
     .download-btn {
       display: inline-flex;
       align-items: center;
@@ -92,8 +100,17 @@
       text-decoration: none;
       transition: all 0.25s ease;
       box-shadow: 0 0 40px rgba(229,9,20,0.3), 0 4px 15px rgba(0,0,0,0.5);
-      position: relative;
-      z-index: 1;
+    }
+    .download-btn.secondary {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+    .download-btn.secondary:hover {
+      background: rgba(255,255,255,0.14);
+      border-color: rgba(255,255,255,0.25);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.4);
     }
     .download-btn:hover {
       background: #f6121d;
@@ -106,6 +123,8 @@
       margin-top: 1rem;
       font-size: 0.8rem;
       color: #555;
+      position: relative;
+      z-index: 1;
     }
     .screenshot-section {
       position: relative;
@@ -283,14 +302,20 @@
 </head>
 <body>
   <section class="hero">
-    <div class="badge"><span class="dot"></span> v1.0.0 &mdash; Windows 10/11</div>
+    <div class="badge"><span class="dot"></span> v1.0.0 &mdash; Windows &amp; Android</div>
     <h1 class="logo">MVO <span>Stream</span></h1>
     <p class="tagline">Discover, search, and stream thousands of movies and TV shows. Beautiful interface, zero ads, completely free.</p>
-    <a href="https://github.com/Adude4554/demo/releases/download/v1.0.0/MVO.Stream.Setup.1.0.0.exe" class="download-btn">
-      <svg viewBox="0 0 24 24"><path d="M13 5v6h1.17L12 13.17 9.83 11H11V5h2zm2-2H9v6H5l7 7 7-7h-4V3zm-4 16H5v2h14v-2h-4z"/></svg>
-      Download for Windows
-    </a>
-    <p class="download-meta">Free &middot; ~200 MB &middot; No installation required</p>
+    <div class="download-buttons">
+      <a href="https://github.com/Adude4554/demo/releases/download/v1.0.0/MVO.Stream.Setup.1.0.0.exe" class="download-btn">
+        <svg viewBox="0 0 24 24"><path d="M0 3.449L9.75 2.1v9.451H0m10.949-9.602L24 0v11.4H10.949M0 12.6h9.75v9.451L0 20.699M10.949 12.6H24V24l-12.9-1.801"/></svg>
+        Download for Windows
+      </a>
+      <a href="https://github.com/Adude4554/demo/releases/download/v1.0.0/MVO.Stream.apk" class="download-btn secondary">
+        <svg viewBox="0 0 24 24"><path d="M6 18c0 .55.45 1 1 1h1v3.5c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5V19h2v3.5c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5V19h1c.55 0 1-.45 1-1V7H6v11zM3.5 7C2.67 7 2 7.67 2 8.5v7c0 .83.67 1.5 1.5 1.5S5 16.33 5 15.5v-7C5 7.67 4.33 7 3.5 7zm17 0c-.83 0-1.5.67-1.5 1.5v7c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5v-7c0-.83-.67-1.5-1.5-1.5zm-4.97-5.84l1.3-1.3c.2-.2.2-.51 0-.71-.2-.2-.51-.2-.71 0l-1.48 1.48C13.85 1.23 12.95 1 12 1c-.96 0-1.86.23-2.66.63L7.85.15c-.2-.2-.51-.2-.71 0-.2.2-.2.51 0 .71l1.31 1.31C6.97 3.26 6 5.01 6 7h12c0-1.99-.97-3.75-2.47-4.84zM10 5H9V4h1v1zm5 0h-1V4h1v1z"/></svg>
+        Download for Android
+      </a>
+    </div>
+    <p class="download-meta">Free &middot; Windows 10/11 or Android 6+ &middot; No ads</p>
   </section>
 
   <section class="screenshot-section">
@@ -334,7 +359,7 @@
       <div class="feature-card">
         <div class="feature-icon"><svg viewBox="0 0 24 24"><path d="M13 2.05v2.02c3.95.49 7 3.85 7 7.93 0 1.56-.47 3.01-1.27 4.22l-1.46-1.46c.53-.9.84-1.94.84-3.05 0-3.23-2.47-5.9-5.64-6.21V2.05h-.47zM5.41 3.35L4 4.76l2.81 2.81C6.29 8.57 6 9.73 6 11c0 3.87 3.13 7 7 7 1.27 0 2.43-.29 3.44-.79L19.24 21l1.41-1.41L5.41 3.35zM11 20c-2.76 0-5-2.24-5-5 0-1.29.5-2.47 1.29-3.36L13 15.1V20z"/></svg></div>
         <h3>Fast &amp; Lightweight</h3>
-        <p>Native desktop app built with Electron. Opens instantly, runs smoothly.</p>
+        <p>Native desktop and mobile app. Opens instantly, runs smoothly on any device.</p>
       </div>
     </div>
   </section>
@@ -347,6 +372,7 @@
       <div class="tech-badge"><span class="dot" style="background:#646cff"></span> Vite</div>
       <div class="tech-badge"><span class="dot" style="background:#38bdf8"></span> Tailwind CSS</div>
       <div class="tech-badge"><span class="dot" style="background:#9146ff"></span> Electron</div>
+      <div class="tech-badge"><span class="dot" style="background:#5856d6"></span> Capacitor</div>
       <div class="tech-badge"><span class="dot" style="background:#e50914"></span> TMDB API</div>
       <div class="tech-badge"><span class="dot" style="background:#22c55e"></span> Zustand</div>
     </div>
@@ -358,7 +384,7 @@
       <a href="https://github.com/Adude4554/demo/releases">Releases</a>
       <a href="https://github.com/Adude4554/demo/issues">Issues</a>
     </div>
-    <p>MVO Stream &copy; 2026 &middot; Open Source &middot; Built with React + Electron</p>
+    <p>MVO Stream &copy; 2026 &middot; Open Source &middot; Built with React + Electron + Capacitor</p>
   </footer>
 </body>
 </html>
